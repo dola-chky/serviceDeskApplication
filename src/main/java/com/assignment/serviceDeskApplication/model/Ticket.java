@@ -1,5 +1,9 @@
 package com.assignment.serviceDeskApplication.model;
 
+import com.assignment.serviceDeskApplication.util.JsonDateDeserializer;
+import com.assignment.serviceDeskApplication.util.JsonDateSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -17,13 +21,16 @@ public class Ticket {
     private String title;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String decription;
+    private String description;
 
     @Column(nullable = false)
     private Date creationDate;
 
     @Column(nullable = false)
     private TicketPriority ticketPriority;
+
+    @Column(nullable = false)
+    private String email;
 
     public long getTicketId() {
         return ticketId;
@@ -41,18 +48,20 @@ public class Ticket {
         this.title = title;
     }
 
-    public String getDecription() {
-        return decription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDecription(String decription) {
-        this.decription = decription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
+    @JsonSerialize(using=JsonDateSerializer.class)
     public Date getCreationDate() {
         return creationDate;
     }
 
+    @JsonDeserialize(using= JsonDateDeserializer.class)
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
@@ -63,5 +72,13 @@ public class Ticket {
 
     public void setTicketPriority(TicketPriority ticketPriority) {
         this.ticketPriority = ticketPriority;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
