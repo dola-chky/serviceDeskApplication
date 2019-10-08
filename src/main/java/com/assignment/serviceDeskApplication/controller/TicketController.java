@@ -1,12 +1,15 @@
 package com.assignment.serviceDeskApplication.controller;
 
 import com.assignment.serviceDeskApplication.model.Ticket;
+import com.assignment.serviceDeskApplication.model.TicketPriority;
 import com.assignment.serviceDeskApplication.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
+import java.util.*;
+
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -17,14 +20,21 @@ public class TicketController {
 
     // Get all tickets
     @RequestMapping(value = "/tickets", method = RequestMethod.GET)
-    public List<Ticket> getAllTickets() {
-        return ticketRepository.findAll();
+    public Map<String, Object> getAllTickets() {
+        List<Ticket> ticketList = ticketRepository.findAll();
+        List<TicketPriority> priorityList = Arrays.asList(TicketPriority.values());
+        Map<String, Object> resultMap = new HashMap();
+        resultMap.put("tickets", ticketList);
+        resultMap.put("priorities", priorityList);
+        return resultMap;
     }
 
     //Create a new ticket from json request body
     @RequestMapping(value = "/ticket", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createTicket(@RequestBody Ticket ticket) {
         try{
+            Date creatonDate = new Date();
+            ticket.setCreationDate(creatonDate);
             Ticket newTicket = ticketRepository.save(ticket);
             return new ResponseEntity<Ticket>(HttpStatus.CREATED);
         } catch(Exception e){

@@ -1,0 +1,95 @@
+<div>
+        <div class="panel panel-default" ng-show="isNewMode">
+            <div class="panel-heading">Tickets</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <form ng-submit="submit()" name="ticketForm" novalidate>
+
+                        <div class="form-group"
+                             ng-class="{ 'has-error': ticketForm.title.$invalid && ticketForm.title.$dirty }">
+                            <label for="title">Title:</label> <input type="text" required
+                                                                   class="form-control" ng-model="ticket.title"
+                                                                   id="title"
+                                                                   name="title">
+                        </div>
+                        <div class="form-group"
+                             ng-class="{ 'has-error': ticketForm.email.$invalid && ticketForm.email.$dirty }">
+                            <label for="email">Email:</label> <input type="text" required
+                                                                     class="form-control email" ng-model="ticket.email"
+                                                                     id="email"
+                                                                     name="email">
+                        </div>
+
+                        <div class="form-group"
+                             ng-class="{ 'has-error': ticketForm.description.$invalid && ticketForm.description.$dirty }">
+                            <label for="description">Description:</label> <textarea type="textArea"
+                                                                           required class="form-control"
+                                                                           ng-model="ticket.description"
+                                                                      id="description" name="description"></textarea>
+                        </div>
+
+                        <div class="form-group"
+                             ng-class="{ 'has-error': ticketForm.priority.$invalid && ticketForm.priority.$dirty }">
+                            <label for="priority">Priority:</label> <select
+                                                                             required class="form-control"
+                                                                             ng-model="priority"
+                                                                             ng-options="priority for priority in priorities"
+                                                                             id="priority" name="priority"></select>
+                        </div>
+
+                       <!-- <div class="form-group"
+                             ng-class="{ 'has-error': ticketForm.date.$invalid && ticketForm.date.$dirty }">
+                            <label for="creationDate">Published Date:</label> <input type="date"
+                                                                      required class="form-control" id="creationDate"
+                                                                      ng-model="ticket.creationDate" name="creationDate">
+                        </div>-->
+                        <button type="submit" class="btn btn-default"
+                                ng-disabled="ticketForm.$invalid">{{buttonText}}
+                        </button>
+                        <button type="button" class="btn btn-cancel"
+                                ng-click="cancel()">Cancel
+                        </button>
+
+                        <div class="alert alert-info margin-top-5" ng-show="message">{{message}}</div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default btn-sm"
+                        ng-hide ="isNewMode"
+                        ng-click="initAddTicket()">
+                    <span class="glyphicon glyphicon-plus"></span> Open New Ticket
+                </button>
+            </div>
+        </div>
+        <div class="panel panel-default" ng-hide="isNewMode">
+            <div class="panel-heading" ng-if="tickets.length > 0">
+                <strong>Tickets</strong>
+            </div>
+            <div class="panel-body" ng-if="tickets.length > 0">
+
+                <div class="alert alert-info margin-top-5" ng-show="deleteMessage">{{deleteMessage}}</div>
+                <div ng-repeat="ticket in tickets|orderBy: 'creationDate':true" >
+                    <h5><strong>{{ticket.title}}</strong></h5>
+                    By <strong>{{ticket.email}}</strong> on <strong>{{ticket.creationDate}}</strong>
+                    <br/>
+                    <br/>
+                    <p>{{ticket.description}}</p>
+                    <p>{{ticket.email}}</p>
+                    <button type="button" class="btn btn-default btn-sm"
+                            ng-click="initEdit(ticket)">
+                        <span class="glyphicon glyphicon-edit"></span>Edit</button>
+                    <button type="button" class="btn btn-default btn-sm"
+                            ng-click="deleteTicket(ticket)">
+                        <span class="glyphicon glyphicon-trash"></span>Close</button>
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+            <div ng-style="{'background-color':blue}" ng-if="tickets.length == 0"><strong> No ticket found </strong></div>
+        </div>
+    </div>
+</div>
